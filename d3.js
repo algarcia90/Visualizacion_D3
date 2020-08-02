@@ -35,6 +35,11 @@ function mapMaker(featureCollection){
 function graphMaker(featureCollection){
     var id_hood = 0
     var max_rents = 0
+
+    var title = graph_svg.append('text')
+        .attr('y',15)
+        .text('Total de alquileres por número de habitación')
+        .attr('font-size','18px')
     
     //Busco el barrio con el mayor numero de alquileres para hacer la representacion
     var hoodSearch = function(){    
@@ -66,7 +71,7 @@ function graphMaker(featureCollection){
             return d.bedrooms
         }))
         .range([2*margin,graphw])
-        .padding(0.2);
+        .padding(0.05);
 
     var scaleY = d3.scaleLinear()
         .domain([0,ymax])
@@ -88,22 +93,25 @@ function graphMaker(featureCollection){
             return ((graphh - margin)-scaleY(d.total))
         })
         .attr('fill',(d) => escalaColores(d.bedrooms))
-    /*
-    var text = svg.append('g')
-    .selectAll('text')
-    .data(input)
-    .enter()
-    .append('text')
-    .attr('x',(d)=> scaleX(d.platform) + scaleX.bandwidth()/2)
-    .attr('y',(d)=> scaleY(d.value) - 5)
-    .attr('visibility','hidden')
-    .text((d) => d.value)
-
-
-    console.log(input.map(function(d) {
-        return scaleY(d.value);
-    }))
-
+        .on('mouseover', handleMouseOver)
+        .on('mouseout',handleMouseOut)
+    
+    function handleMouseOver(d,i){
+        d3.select(this)
+            .transition()
+            .duration(500)
+            .attr('fill','black')
+        };
+        
+    function handleMouseOut(d,i){
+        d3.select(this)
+            .transition()
+            .duration(200)
+            .attr('fill',(d) => escalaColores(d.bedrooms))
+    }
+    
+    
+        /*
     var raton = rect.on('mouseover',function(d){
         d3.select(this)
             .attr('class','')
