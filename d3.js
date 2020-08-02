@@ -72,6 +72,9 @@ function graphMaker(featureCollection){
         .domain([0,ymax])
         .range([graphh - margin,margin]);
 
+    //Creo también una escala de colores para darle mejor visualización al gráfico
+    var escalaColores = d3.scaleOrdinal(d3.schemeTableau10);
+
     //Agrego los rectángulos
     var rect = graph_svg.append('g')
         .selectAll('rect')
@@ -84,7 +87,7 @@ function graphMaker(featureCollection){
         .attr('height', function(d) {
             return ((graphh - margin)-scaleY(d.total))
         })
-        .attr('fill','red')
+        .attr('fill',(d) => escalaColores(d.bedrooms))
     /*
     var text = svg.append('g')
     .selectAll('text')
