@@ -35,9 +35,15 @@ function mapMaker(featureCollection){
 
     console.log(projection)
 
+    //creo la escala de colores
+    //var escalaColores = d3.scaleLinear(d3.interpolateRdYlBu())
+
     //preparo la función para crear paths
     var pathProjection = d3.geoPath().projection(projection);
     var features = featureCollection.features;
+    var avgmax = d3.max(features,(d) => d.properties.avgprice)
+
+    console.log(avgmax)
 
     var createdPath = map_svg.selectAll('path')
         .data(features)
@@ -45,9 +51,11 @@ function mapMaker(featureCollection){
         .append('path')
         .attr('d', (d) => pathProjection(d))
         .attr("opacity", function(d, i) {
-            d.opacity = 1
+            d.opacity = (d.properties.avgprice) ? 1:0
             return d.opacity
-        });
+        })
+        .attr('fill',(d) => d3.interpolateRdYlGn(1 - d.properties.avgprice/avgmax))
+        ;
 
 /* 
     var scaleColor = d3.scaleOrdinal(d3.schemeTableau10);
