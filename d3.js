@@ -65,7 +65,7 @@ function mapMaker(featureCollection){
             d.opacity = (d.properties.avgprice) ? 0.7:0.2
             return d.opacity
         })
-        .attr('fill',(d) => d3.interpolateRdYlGn(1 - d.properties.avgprice/avgmax))
+        .attr('fill',(d) => d3.interpolateRdYlGn((1 - d.properties.avgprice/avgmax)**3))
         .on('mouseover',handleMouseOver)
         .on('mouseout',handleMouseOut);
 
