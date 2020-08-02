@@ -55,13 +55,13 @@ function graphMaker(featureCollection){
     console.log(barrio)
 
     //creacion de escalas
-    var hoodData = barrio.properties.avgbedrooms
-    console.log('hooddata'+hoodData)
-    var ymin = d3.min(hoodData, (d)=> d.total);
-    var ymax = d3.max(hoodData, (d)=> d.total);
+    var data = barrio.properties.avgbedrooms
+    console.log(data)
+    //var ymin = d3.min(data, (d)=> d.total);
+    var ymax = d3.max(data, (d)=> d.total);
 
     var scaleX = d3.scaleBand()
-        .domain(hoodData.map(function(d){
+        .domain(data.map(function(d){
             console.log(d.bedrooms)
             return d.bedrooms
         }))
@@ -70,29 +70,22 @@ function graphMaker(featureCollection){
 
     var scaleY = d3.scaleLinear()
         .domain([0,ymax])
-        .range([graphh - margin,0]);
+        .range([graphh - margin,margin]);
 
-
-    
+    //Agrego los rectángulos
+    var rect = graph_svg.append('g')
+        .selectAll('rect')
+        .data(data)
+        .enter()
+        .append('rect')
+        .attr('x',(d) => scaleX(d.bedrooms))
+        .attr('y',(d) => scaleY(d.total))
+        .attr('width', scaleX.bandwidth())
+        .attr('height', function(d) {
+            return ((graphh - margin)-scaleY(d.total))
+        })
+        .attr('fill','red')
     /*
-    var rect = svg.append('g')
-    .selectAll('rect')
-    .data(input)
-    .enter()
-    .append('rect')
-    .attr('x',(d)=> scaleX(d.platform))
-    .attr('y',scaleY(0))
-    .attr('width', scaleX.bandwidth())
-    .attr('height', 0)
-    .attr('fill',(d) => d.color)
-    .attr('class',function(d){
-        return (d.value > 12) ? 'rectwarning':''
-        /*if (d.value > 12 ) {
-            return 'rectwarning'
-        }
-    })
-
-
     var text = svg.append('g')
     .selectAll('text')
     .data(input)
