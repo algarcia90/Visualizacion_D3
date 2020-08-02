@@ -41,13 +41,11 @@ function mapMaker(featureCollection){
         .style('border-width', '1px')
         .style('border-radius', '5px');
 
+    //creacion de la proyeccion
     var projection = d3.geoMercator()
         .fitSize([mapw, maph], featureCollection)
 
     console.log(projection)
-
-    //creo la escala de colores
-    //var escalaColores = d3.scaleLinear(d3.interpolateRdYlBu())
 
     //preparo la función para crear paths
     var pathProjection = d3.geoPath().projection(projection);
@@ -56,6 +54,13 @@ function mapMaker(featureCollection){
 
     console.log(avgmax)
 
+    //Agrego un titulo al mapa    
+    var title = map_svg.append('text')
+    .attr('y',20)
+    .style('background-color', 'white')
+    .text('Precio medio del alquiler por Barrios (Madrid)');
+
+    //creo los barrios en el mapa
     var createdPath = map_svg.selectAll('path')
         .data(features)
         .enter()
@@ -69,83 +74,38 @@ function mapMaker(featureCollection){
         .on('mouseover',handleMouseOver)
         .on('mouseout',handleMouseOut);
 
-        function handleMouseOver(d, i) {
-            d3.select(this)
-                .transition()
-                .duration(1000)
-                .attr('opacity', 1)
-                .style('border','solid')
-                .style('border-width', '2px')
-                .style('border-color','black')
+    //gestion del mouse
+    function handleMouseOver(d, i) {
+        d3.select(this)
+            .transition()
+            .duration(1000)
+            .attr('opacity', 1)
+            .style('border','solid')
+            .style('border-width', '2px')
+            .style('border-color','black')
 
-            tooltip.transition()
-                .duration(400)
-                .style('visibility', 'visible')
-                .style('left', (d3.event.pageX + 20) + 'px')
-                .style('top', (d3.event.pageY - 30) + 'px')
-                .text(` Barrio: ${d.properties.name}, Precio Medio: ${d.properties.avgprice} Eur `)
-        
-        }
-        
-        function handleMouseOut(d, i) {
-            d3.select(this)
-                .transition()
-                .duration(200)
-                .attr('opacity', function(d, i) {
-                    d.opacity = (d.properties.avgprice) ? 0.7:0.1
-                    return d.opacity
-                })
-                .attr('r', (d) => ratio)
-        
-            tooltip.transition()
-                .duration(200)
-                .style('visibility', 'hidden')
-                // .style('opacity', .9)
-        
-        }
-
-/* 
-    createdPath.on('click', handleClick)
-        //Asignamos un color a cada path a traves de nuestra escala de colores
-    createdPath.attr('fill', (d) => scaleColor(d.properties.name));
-
-    //Creacion de una leyenda
-    var nblegend = 10;
-    var widthRect = (width / nblegend) - 2;
-    var heightRect = 10;
-
-    var scaleLegend = d3.scaleLinear()
-        .domain([0, nblegend])
-        .range([0, width]);
-        
-    var legend = svg.append('g')
-        .selectAll('rect')
-        .data(d3.schemeTableau10)
-        .enter()
-        .append('rect')
-        .attr('width', widthRect)
-        .attr('height', heightRect)
-        .attr('x', (d, i) => scaleLegend(i)) // o (i * (widthRect + 2)) //No haria falta scaleLegend
-        .attr('fill', (d) => d);
-
-    var text_legend = svg.append('g')
-        .selectAll('text')
-        .data(d3.schemeTableau10)
-        .enter()
-        .append('text')
-        .attr('x', (d, i) => scaleLegend(i)) // o (i * (widthRect + 2))
-        .attr('y', heightRect * 2.5)
-        .text((d) => d)
-        .attr('font-size', 12)
-
-    //Captura de eventos Click
-    function handleClick(d) {
-        d.opacity = d.opacity ? 0 : 1;
-        d3.select(this).attr('opacity', d.opacity);
-        console.log(d.properties.name);
+        tooltip.transition()
+            .duration(400)
+            .style('visibility', 'visible')
+            .style('left', (d3.event.pageX + 20) + 'px')
+            .style('top', (d3.event.pageY - 30) + 'px')
+            .text(` Barrio: ${d.properties.name}, Precio Medio: ${d.properties.avgprice} Eur `)
+    
     }
-}*/
-
+    
+    function handleMouseOut(d, i) {
+        d3.select(this)
+            .transition()
+            .duration(200)
+            .attr('opacity', function(d, i) {
+                d.opacity = (d.properties.avgprice) ? 0.7:0.1
+                return d.opacity
+            })
+    
+        tooltip.transition()
+            .duration(200)
+            .style('visibility', 'hidden')
+    }
 };
 
 function pieMaker(featureCollection){
