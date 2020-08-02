@@ -59,7 +59,8 @@ function mapMaker(featureCollection){
     var title = map_svg.append('text')
     .attr('y',20)
     .style('background-color', 'white')
-    .text('Precio medio del alquiler por Barrios (Madrid)');
+    .text('Precio medio del alquiler por Barrios (Madrid)')
+    .attr('font-size','18px');
 
     //creo los barrios en el mapa
     var createdPath = map_svg.selectAll('path')
