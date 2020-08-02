@@ -87,7 +87,7 @@ function graphMaker(featureCollection){
         .enter()
         .append('rect')
         .attr('x',(d) => scaleX(d.bedrooms))
-        .attr('y',(d) => scaleY(d.total))
+        .attr('y',0)
         .attr('width', scaleX.bandwidth())
         .attr('height', function(d) {
             return ((graphh - margin)-scaleY(d.total))
@@ -109,31 +109,14 @@ function graphMaker(featureCollection){
             .duration(200)
             .attr('fill',(d) => escalaColores(d.bedrooms))
     }
-    
-    
-        /*
-    var raton = rect.on('mouseover',function(d){
-        d3.select(this)
-            .attr('class','')
-            .attr('fill','orange')
-        })
-        .on('mouseout',function(d) {
-            d3.select(this).attr('fill',(d) => d.color).attr('class',function(d) {return (d.value > 12)? 'rectwarning':''})
-        });
 
-    var animationG = rect.transition()
-        .duration(2000)
-        .ease(d3.easeBounce)
-        .delay(1000)
-        .attr('y',(d)=> scaleY(d.value))
-        .attr('height', function(d) {
-            return height/2 - scaleY(d.value)
-        });
+    //animacion de caida de los rectangulos
+    var animation = rect.transition()
+        .duration(3000)
+        .ease(d3.easeElastic)
+        .delay(0)
+        .attr('y',(d) => scaleY(d.total));    
 
-    var animationT = text.transition()
-        .delay(3000)
-        .attr('visibility','visible')
-    svg.append('g').call(yaxis);*/
     var xaxis = d3.axisBottom(scaleX);
     var yaxis = d3.axisLeft(scaleY);
     graph_svg.append('g').attr("transform", "translate(0, " + (graphh - margin) + ")").call(xaxis);
