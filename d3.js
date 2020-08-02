@@ -77,6 +77,10 @@ function graphMaker(featureCollection){
         .domain([0,ymax])
         .range([graphh - margin,margin]);
 
+    //creacion de ejes
+    var xaxis = d3.axisBottom(scaleX);
+    var yaxis = d3.axisLeft(scaleY);
+
     //Creo también una escala de colores para darle mejor visualización al gráfico
     var escalaColores = d3.scaleOrdinal(d3.schemeTableau10);
 
@@ -117,8 +121,7 @@ function graphMaker(featureCollection){
         .delay(0)
         .attr('y',(d) => scaleY(d.total));    
 
-    var xaxis = d3.axisBottom(scaleX);
-    var yaxis = d3.axisLeft(scaleY);
+    //coloco los ejes
     graph_svg.append('g').attr("transform", "translate(0, " + (graphh - margin) + ")").call(xaxis);
     graph_svg.append('g').attr('transform','translate('+2*margin+',0)').call(yaxis);
 };
