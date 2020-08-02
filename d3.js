@@ -24,14 +24,33 @@ var graph_svg = d3.select('div')
 d3.json('practica_airbnb.json').then((featureCollection) => {
     console.log(featureCollection);
     mapMaker(featureCollection);
-    pieMaker(featureCollection);
+    graphMaker(featureCollection);
 });
 
 function mapMaker(featureCollection){
     console.log(featureCollection)
 };
 
-function pieMaker(featureCollection){
-    console.log(featureCollection)
+function graphMaker(featureCollection){
+    var id_hood = 0
+    var max_rents = 0
+    
+    //Busco el barrio con el mayor numero de alquileres para hacer la representacion
+    var hoodSearch = function(){    
+        featureCollection.features.forEach((d,i) => {
+            total = 0
+            d.properties.avgbedrooms.forEach((b) => {
+                total = total + b.total
+            })
+            id_hood = (max_rents > total) ? id_hood : i
+            max_rents = (max_rents > total) ? max_rents : total
+            console.log(i + '  ' + d.properties.name + ': total habitaciones ' + total)
+        });
+    };
+    //console.log(id_hood + '  ' + max_rents)
+    //console.log(featureCollection.features[id_hood].properties.name)
+
+    barrio = featureCollection.features[id_hood]
+    console.log(barrio)
 };
 
