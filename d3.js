@@ -36,10 +36,22 @@ function graphMaker(featureCollection){
     var id_hood = 0
     var max_rents = 0
 
+    //creo un titulo para el grafico
     var title = graph_svg.append('text')
         .attr('y',15)
         .text('Total de alquileres por número de habitación')
         .attr('font-size','18px')
+
+    //creo el tooltip para que aparezca despues
+    var tooltip = d3.select('div').append('div')
+        .attr('class', 'tooltip')
+        .style('position', 'absolute') //Para obtener la posicion correcta sobre los circulos
+        .style('pointer-events', 'none') //Para evitar el flicker
+        .style('visibility', 'hidden')
+        .style('background-color', '#FFF2BA')
+        .style('border', 'solid')
+        .style('border-width', '1px')
+        .style('border-radius', '5px');
     
     //Busco el barrio con el mayor numero de alquileres para hacer la representacion
     var hoodSearch = function(){    
@@ -105,6 +117,13 @@ function graphMaker(featureCollection){
             .transition()
             .duration(500)
             .attr('fill','black')
+        
+        tooltip.transition()
+            .duration(400)
+            .style('visibility', 'visible')
+            .style('left', (d3.event.pageX + 20) + 'px')
+            .style('top', (d3.event.pageY - 30) + 'px')
+            .text(`Total de alquileres: ${d.total}`)
         };
         
     function handleMouseOut(d,i){
@@ -112,6 +131,10 @@ function graphMaker(featureCollection){
             .transition()
             .duration(200)
             .attr('fill',(d) => escalaColores(d.bedrooms))
+
+        tooltip.transition()
+            .duration(100)
+            .style('visibility', 'hidden')
     }
 
     //animacion de caida de los rectangulos
@@ -122,7 +145,7 @@ function graphMaker(featureCollection){
         .attr('y',(d) => scaleY(d.total));    
 
     //coloco los ejes
-    graph_svg.append('g').attr("transform", "translate(0, " + (graphh - margin) + ")").call(xaxis);
+    graph_svg.append('g').attr('transform', 'translate(0, ' + (graphh - margin) + ')').call(xaxis);
     graph_svg.append('g').attr('transform','translate('+2*margin+',0)').call(yaxis);
 };
 
